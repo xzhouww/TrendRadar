@@ -6,9 +6,9 @@ on:
     - cron: "0 */6 * * *" # 每6小时执行一次(0点、6点、12点、18点，实际有偏差) 或者 "0 * * * *" (每小时整点运行一次) 或者 "*/30 * * * *" (每半小时执行一次) 或者 "*/30 0-14 * * *"(每天早上 8 点到晚上 10 点期间，每半小时运行一次)
   workflow_dispatch:
 
-# 添加权限设置
+# 添加权限设置（已移除 contents: write，因为不再自动提交）
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   crawl:
@@ -63,10 +63,3 @@ jobs:
           NTFY_TOKEN: ${{ secrets.NTFY_TOKEN }}
           GITHUB_ACTIONS: true
         run: python main.py
-
-      - name: Commit and push if changes
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
-          git add -A
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto update by GitHub Actions at $(TZ=Asia/Shanghai date)" && git push)
